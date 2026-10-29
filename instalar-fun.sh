@@ -34,7 +34,7 @@ echo -e "${BLUE}[Instalador FUN]${RESET} Agregando la función 'fun' a $SHELL_CO
 
 cat << 'EOF' >> "$SHELL_CONFIG"
 
-# --- Función FUN (Full Update/Upgrade Nala) ---
+# --- Función FUN (Full Upgrade Nala y componentes) ---
 fun () 
 { 
     local c_info c_step c_ok c_err c_reset;
@@ -46,33 +46,40 @@ fun ()
 
     printf '\n%b[fun]%b Iniciando mantenimiento del sistema...\n' "$c_info" "$c_reset";
 
-    printf '%b[fun]%b 1/5 Actualizando e instalando paquetes con Nala...\n' "$c_step" "$c_reset";
-    if ! sudo nala upgrade -y; then
-        printf '%b[fun]%b Error en "nala upgrade".\n' "$c_err" "$c_reset";
+    printf '%b[fun]%b 1/6 Actualizando e instalando paquetes con Nala (incluyendo Kernel)...\n' "$c_step" "$c_reset";
+    if ! sudo nala upgrade --full -y; then
+        printf '%b[fun]%b Error en "nala upgrade --full".\n' "$c_err" "$c_reset";
         return 1;
     fi;
 
-    printf '%b[fun]%b 2/5 Eliminando paquetes innecesarios...\n' "$c_step" "$c_reset";
+    printf '%b[fun]%b 2/6 Eliminando paquetes innecesarios...\n' "$c_step" "$c_reset";
     if ! sudo nala autopurge -y; then
         printf '%b[fun]%b Error al eliminar paquetes sobrantes.\n' "$c_err" "$c_reset";
         return 1;
     fi;
 
-    printf '%b[fun]%b 3/5 Limpiando caché de paquetes...\n' "$c_step" "$c_reset";
+    printf '%b[fun]%b 3/6 Limpiando caché de paquetes...\n' "$c_step" "$c_reset";
     if ! sudo nala clean; then
         printf '%b[fun]%b Error limpiando el caché.\n' "$c_err" "$c_reset";
         return 1;
     fi;
 
     if command -v flatpak >/dev/null 2>&1; then
-        printf '%b[fun]%b 4/5 Actualizando aplicaciones Flatpak...\n' "$c_step" "$c_reset";
+        printf '%b[fun]%b 4/6 Actualizando aplicaciones Flatpak...\n' "$c_step" "$c_reset";
         flatpak update -y
         flatpak uninstall --unused -y
     else
-        printf '%b[fun]%b 4/5 Flatpak no detectado, omitiendo...\n' "$c_step" "$c_reset";
+        printf '%b[fun]%b 4/6 Flatpak no detectado, omitiendo...\n' "$c_step" "$c_reset";
     fi;
 
-    printf '%b[fun]%b 5/5 Mantenimiento completado correctamente.\n' "$c_ok" "$c_reset";
+    if command -v cinnamon-spice-updater >/dev/null 2>&1; then
+        printf '%b[fun]%b 5/6 Actualizando complementos de Cinnamon...\n' "$c_step" "$c_reset";
+        cinnamon-spice-updater --update-all
+    else
+        printf '%b[fun]%b 5/6 Actualizador de Cinnamon spices omitido...\n' "$c_step" "$c_reset";
+    fi;
+
+    printf '%b[fun]%b 6/6 Mantenimiento completado correctamente.\n' "$c_ok" "$c_reset";
 
     if [ -f /var/run/reboot-required ]; then
         printf '\n%b[AVISO]%b Se han actualizado componentes del sistema o el kernel. %bSe recomienda reiniciar el equipo.%b\n\n' "$c_err" "$c_reset" "$c_step" "$c_reset";
