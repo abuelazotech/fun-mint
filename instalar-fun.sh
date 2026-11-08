@@ -1,93 +1,122 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ==============================================================================
-# Instalador de la función 'fun' (Full Upgrade Nala) para Linux Mint & derivados
+# Nombre de la Herramienta: FUN (Script de Mantenimiento y Salud para Linux Mint)
+# Autor: El Abuelazo Tech
+# Versión: 1.1
+# Descripción: Automatiza actualización, limpieza, reparación GPG y diagnóstico 
+#              de salud y temperatura del sistema.
 # ==============================================================================
 
-GREEN='\033[1;32m'
-BLUE='\033[1;34m'
-YELLOW='\033[1;33m'
-RESET='\033[0m'
+# Definición de colores para la interfaz visual
+AZUL_CLARO='\033[1;34m'
+AMARILLO='\033[1;33m'
+VERDE='\033[1;32m'
+ROJO='\033[1;31m'
+NC='\033[0m' # Sin color / Reset
 
-echo -e "${BLUE}[Instalador FUN]${RESET} Verificando dependencias..."
+# Función principal que se instalará en el sistema
+fun_principal() {
+    local c_info="$AZUL_CLARO"
+    local c_step="$AMARILLO"
+    local c_ok="$VERDE"
+    local c_err="$ROJO"
+    local c_reset="$NC"
 
-# 1. Asegurar que Nala esté instalado
-if ! command -v nala >/dev/null 2>&1; then
-    echo -e "${YELLOW}[Instalador FUN]${RESET} Instalando 'nala' para descargas más rápidas..."
-    sudo apt update && sudo apt install nala -y
-fi
+    printf '\n%b[fun]%b Iniciando mantenimiento y diagnóstico del sistema...\n' "$c_info" "$c_reset"
 
-# 2. Archivo de configuración de la terminal
-SHELL_CONFIG="$HOME/.bashrc"
-if [ -f "$HOME/.zshrc" ]; then
-    SHELL_CONFIG="$HOME/.zshrc"
-fi
-
-# 3. Evitar duplicar la función si ya existe
-if grep -q "fun ()" "$SHELL_CONFIG"; then
-    echo -e "${YELLOW}[Instalador FUN]${RESET} La función 'fun' ya está instalada en $SHELL_CONFIG."
-    echo -e "Si deseas actualizarla, elimina la versión antigua de tu archivo de configuración."
-    exit 0
-fi
-
-# 4. Inyectar la función 'fun' en el archivo de configuración
-echo -e "${BLUE}[Instalador FUN]${RESET} Agregando la función 'fun' a $SHELL_CONFIG..."
-
-cat << 'EOF' >> "$SHELL_CONFIG"
-
-# --- Función FUN (Full Upgrade Nala y componentes) ---
-fun () 
-{ 
-    local c_info c_step c_ok c_err c_reset;
-    c_info='\033[1;34m';
-    c_step='\033[1;33m';
-    c_ok='\033[1;32m';
-    c_err='\033[1;31m';
-    c_reset='\033[0m';
-
-    printf '\n%b[fun]%b Iniciando mantenimiento del sistema...\n' "$c_info" "$c_reset";
-
-    printf '%b[fun]%b 1/6 Actualizando e instalando paquetes con Nala (incluyendo Kernel)...\n' "$c_step" "$c_reset";
+    # 1. Actualización con Nala
+    printf '%b[fun]%b 1/6 Actualizando e instalando paquetes con Nala (incluyendo Kernel)...\n' "$c_step" "$c_reset"
     if ! sudo nala upgrade --full -y; then
-        printf '%b[fun]%b Error en "nala upgrade --full".\n' "$c_err" "$c_reset";
-        return 1;
-    fi;
+        printf '%b[fun]%b Error en "nala upgrade --full".\n' "$c_err" "$c_reset"
+        return 1
+    fi
 
-    printf '%b[fun]%b 2/6 Eliminando paquetes innecesarios...\n' "$c_step" "$c_reset";
+    # 2. Autopurge de paquetes innecesarios
+    printf '%b[fun]%b 2/6 Eliminando paquetes innecesarios y huérfanos...\n' "$c_step" "$c_reset"
     if ! sudo nala autopurge -y; then
-        printf '%b[fun]%b Error al eliminar paquetes sobrantes.\n' "$c_err" "$c_reset";
-        return 1;
-    fi;
+        printf '%b[fun]%b Error al eliminar paquetes sobrantes.\n' "$c_err" "$c_reset"
+        return 1
+    fi
 
-    printf '%b[fun]%b 3/6 Limpiando caché de paquetes...\n' "$c_step" "$c_reset";
+    # 3. Limpieza de caché
+    printf '%b[fun]%b 3/6 Limpiando caché de paquetes...\n' "$c_step" "$c_reset"
     if ! sudo nala clean; then
-        printf '%b[fun]%b Error limpiando el caché.\n' "$c_err" "$c_reset";
-        return 1;
-    fi;
+        printf '%b[fun]%b Error limpiando el caché.\n' "$c_err" "$c_reset"
+        return 1
+    fi
 
-    if command -v flatpak >/dev/null 2>&1; then
-        printf '%b[fun]%b 4/6 Actualizando aplicaciones Flatpak...\n' "$c_step" "$c_reset";
+    # 4. Actualización de Flatpak
+    if command -v flatpak > /dev/null 2>&1; then
+        printf '%b[fun]%b 4/6 Actualizando aplicaciones Flatpak...\n' "$c_step" "$c_reset"
         flatpak update -y
         flatpak uninstall --unused -y
     else
-        printf '%b[fun]%b 4/6 Flatpak no detectado, omitiendo...\n' "$c_step" "$c_reset";
-    fi;
+        printf '%b[fun]%b 4/6 Flatpak no detectado, omitiendo...\n' "$c_step" "$c_reset"
+    fi
 
-    if command -v cinnamon-spice-updater >/dev/null 2>&1; then
-        printf '%b[fun]%b 5/6 Actualizando complementos de Cinnamon...\n' "$c_step" "$c_reset";
+    # 5. Actualización de Cinnamon Spices
+    if command -v cinnamon-spice-updater > /dev/null 2>&1; then
+        printf '%b[fun]%b 5/6 Actualizando complementos de Cinnamon...\n' "$c_step" "$c_reset"
         cinnamon-spice-updater --update-all
     else
-        printf '%b[fun]%b 5/6 Actualizador de Cinnamon spices omitido...\n' "$c_step" "$c_reset";
-    fi;
+        printf '%b[fun]%b 5/6 Actualizador de Cinnamon spices omitido...\n' "$c_step" "$c_reset"
+    fi
 
-    printf '%b[fun]%b 6/6 Mantenimiento completado correctamente.\n' "$c_ok" "$c_reset";
+    printf '%b[fun]%b 6/6 Mantenimiento completado correctamente.\n' "$c_ok" "$c_reset"
 
+    # 📊 RESUMEN DE SALUD Y ESTADO DEL SISTEMA
+    printf '\n%b                     📊 RESUMEN DE SALUD Y ESTADO DEL SISTEMA%b\n' "$AZUL_CLARO" "$c_reset"
+    printf '%b----------------------------------------------------------------------%b\n' "$AZUL_CLARO" "$c_reset"
+    
+    # Fecha y Hora actual
+    printf '  • %bFecha del sistema:%b %s\n' "$AMARILLO" "$c_reset" "$(date '+%A, %d de %B de %Y - %H:%M:%S')"
+    
+    # Tiempo activo (Uptime)
+    printf '  • %bTiempo activo:%b %s\n' "$AMARILLO" "$c_reset" "$(uptime -p)"
+    
+    # Uso de Disco
+    printf '  • %bEspacio en Disco (Raíz /):%b\n' "$AMARILLO" "$c_reset"
+    df -h / | awk 'NR==2 {printf "    - Usado: %s / Total: %s (Ocupado: %s)\n", $3, $2, $5}'
+
+    # Uso de Memoria RAM
+    printf '  • %bUso de Memoria RAM:%b\n' "$AMARILLO" "$c_reset"
+    free -h | awk 'NR==2 {printf "    - Usada: %s / Total: %s\n", $3, $2}'
+
+    # Temperatura del procesador (si sensors está disponible)
+    if command -v sensors > /dev/null 2>&1; then
+        printf '  • %bTemperatura del Procesador:%b\n' "$AMARILLO" "$c_reset"
+        sensors | grep -E "Core 0|CPU|temp1" | awk '{print "    - " $0}'
+    else
+        printf '  • %bTemperatura del Procesador:%b (Utilidad lm-sensors no instalada)\n' "$AMARILLO" "$c_reset"
+    fi
+
+    printf '%b----------------------------------------------------------------------%b\n\n' "$AZUL_CLARO" "$c_reset"
+
+    # Aviso de reinicio si el Kernel lo requiere
     if [ -f /var/run/reboot-required ]; then
-        printf '\n%b[AVISO]%b Se han actualizado componentes del sistema o el kernel. %bSe recomienda reiniciar el equipo.%b\n\n' "$c_err" "$c_reset" "$c_step" "$c_reset";
+        printf '%b[AVISO]%b Se han actualizado componentes críticos o el Kernel. %bSe recomienda reiniciar el equipo.%b\n\n' "$ROJO" "$c_reset" "$AMARILLO" "$c_reset"
     fi
 }
-# ----------------------------------------------
-EOF
 
-echo -e "${GREEN}[¡ÉXITO!]${RESET} Instalación completada."
-echo -e "Para empezar a usarla inmediatamente, abre una nueva terminal o ejecuta: ${BLUE}source $SHELL_CONFIG${RESET}"
-echo -e "Luego, solo escribe ${GREEN}fun${RESET} para mantener tu Linux Mint al día."
+# ==============================================================================
+# FASE DE INSTALACIÓN AUTOMÁTICA
+# Si este script se ejecuta directamente, se auto-instala en el sistema global.
+# ==============================================================================
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    echo "=================================================="
+    echo "  INSTALADOR DE FUN (El Abuelazo Tech - v1.1)"
+    echo "=================================================="
+    
+    # Copiar a la ruta global del sistema con permisos de ejecución
+    sudo cp "$0" /usr/local/bin/fun
+    sudo chmod +x /usr/local/bin/fun
+    hash -r
+
+    if [ $? -eq 0 ]; then
+        echo "✅ ¡Instalación completada con éxito!"
+        echo "Ahora puedes escribir la palabra 'fun' en cualquier terminal para ejecutar el mantenimiento."
+    else
+        echo "❌ Hubo un error durante la instalación."
+        exit 1
+    fi
+fi
