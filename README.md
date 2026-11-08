@@ -1,35 +1,25 @@
-# Script de Mantenimiento FUN (Full Upgrade Nala)
+# FUN - Script de Mantenimiento y Salud para Linux Mint
 
-Herramienta ligera para **Linux Mint** (y distribuciones basadas en Ubuntu/Debian) que automatiza en un solo comando el mantenimiento integral de tu sistema operativo.
+Herramienta automatizada en Bash diseñada para facilitar el mantenimiento preventivo, la actualización de paquetes, la limpieza del sistema y la monitorización de salud en Linux Mint.
 
-## ¿Qué hace la función `fun`?
+## ✨ Características de la Versión 1.1
+- **Actualización Completa con Nala:** Optimiza la gestión de paquetes, repositorios y el Kernel del sistema.
+- **Autopurge y Limpieza:** Elimina paquetes huérfanos y limpia la caché para liberar espacio valioso.
+- **Mantenimiento Flatpak:** Actualiza aplicaciones en entorno aislado y elimina dependencias huérfanas de forma automática.
+- **Actualización de Cinnamon Spices:** Mantiene al día los applets, desklets y extensiones del entorno de escritorio.
+- **📊 Resumen de Salud y Estado del Sistema:** Al finalizar, muestra un reporte claro que incluye:
+  - Fecha actual y tiempo activo del sistema (*uptime*).
+  - Estado del espacio en disco de la partición raíz (`/`).
+  - Porcentaje de uso de la memoria RAM.
+  - **Temperatura actual del procesador (CPU)** (mediante `lm-sensors`).
+- **Aviso de Reinicio:** Detecta automáticamente si el sistema o el Kernel requieren reinicio crítico.
 
-Ejecuta un flujo optimizado de 6 pasos:
-1. **Nala Upgrade Full:** Actualiza repositorios y paquetes del sistema (incluyendo kernels retenidos).
-2. **Nala Autopurge:** Elimina dependencias huérfanas o innecesarias.
-3. **Nala Clean:** Limpia el caché de paquetes descargados para ahorrar espacio.
-4. **Flatpak Update:** Actualiza tus aplicaciones Flatpak y elimina residuos no utilizados.
-5. **Cinnamon Spices:** Actualiza tus complementos de escritorio (Desklets, Applets, Extensiones).
-6. **Notificación de reinicio:** Te avisa si se ha actualizado el kernel y se requiere reiniciar.
+## 🚀 Instalación Fácil
 
-## Modo de instalación
+1. Descarga el archivo `instalar-fun.sh` desde este repositorio.
+2. Haz **doble clic** sobre el archivo descargado y selecciona **"Ejecutar en terminal"** (o "Ejecutar").
 
-1. Clona o descarga este repositorio.
-2. Abre una terminal en la carpeta descargada y otorga permisos de ejecución:
-   ```bash
-   chmod +x instalar-fun.sh
+¡Y listo! El instalador se encargará de configurar todo automáticamente. A partir de ese momento, solo tendrás que abrir cualquier terminal y escribir la palabra **`fun`** para hacer el mantenimiento de tu equipo.
 
-    Ejecuta el instalador:
-    Bash
-
-    ./instalar-fun.sh
-
-    Carga la configuración o abre una nueva terminal:
-    Bash
-
-    source ~/.bashrc
-
-¡Listo! Para usarlo en cualquier momento, simplemente escribe en tu terminal:
-Bash
-
-fun
+---
+*(Nota para usuarios avanzados: También puedes clonar el repositorio o ejecutar el script directamente desde la terminal si lo prefieres).*
