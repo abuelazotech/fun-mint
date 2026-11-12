@@ -2,6 +2,8 @@
 
 Herramienta automatizada en Bash diseñada para facilitar el mantenimiento preventivo, la actualización de paquetes, la limpieza del sistema y la monitorización de salud en Linux Mint.
 
+![Vista previa de fun](screenshots/preview.jpeg)
+
 ## ✨ Características de la Versión 1.1
 - **Actualización Completa con Nala:** Optimiza la gestión de paquetes, repositorios y el Kernel del sistema.
 - **Autopurge y Limpieza:** Elimina paquetes huérfanos y limpia la caché para liberar espacio valioso.
