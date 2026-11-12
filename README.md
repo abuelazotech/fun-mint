@@ -16,6 +16,6 @@ Si este script te ha servido para hacerte la vida más fácil con tu Linux Mint 
 
 Puedes invitarme a un café virtual por aquí:
 
-👉 **[¡Invítame un café en Ko-fi!](https://ko-fi.com/elabuelazotech)** 
+👉 **[¡Invítame un café en Ko-fi!](https://ko-fi.com/abuelazotech)** 
 
 ¡Mil gracias por tu apoyo y por formar parte de esta comunidad!
