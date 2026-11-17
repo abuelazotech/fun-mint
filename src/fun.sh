@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-VERDE='\033[1;92m'; AZUL='\033[1;96m'; AMARILLO='\033[1;93m'; ESMERALDA='\033[1;32m'; ROJO='\033[1;91m'; NC='\033[0m'
+VERDE='\033[1;92m'; AZUL='\033[1;96m'; AMARILLO='\033[1;93m'; ESMERALDA='\033[1;32m'; ROJO='\033[1;91m'; BLANCO='\033[1;97m'; NC='\033[0m'
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -76,15 +76,15 @@ fi
 echo -e "${VERDE}[7/7] Generando reporte...${NC}"
 
 echo -e "${ESMERALDA}╔══════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${ESMERALDA}║        REPORTE FINAL DE MANTENIMIENTO Y SALUD                ║${NC}"
+echo -e "${ESMERALDA}║${NC}  ${BLANCO}✨ REPORTE FINAL DE MANTENIMIENTO Y SALUD ✨${NC}  ${ESMERALDA}║${NC}"
 echo -e "${ESMERALDA}╠══════════════════════════════════════════════════════════════╣${NC}"
-echo -e "${ESMERALDA}║  KERNEL:               ${KERNEL}${NC}"
-echo -e "${ESMERALDA}║  RAM:                  ${RAM}${NC}"
-echo -e "${ESMERALDA}║  DISCO:                ${DISCO_USO}${NC}"
-echo -e "${ESMERALDA}║  SALUD DEL DISCO:      ${DISK_HEALTH}${NC}"
-echo -e "${ESMERALDA}║  TEMPERATURA CPU:      ${TEMP}${NC}"
-echo -e "${ESMERALDA}║  ESPACIO RECUPERADO:   ${ESPACIO} MB${NC}"
-echo -e "${ESMERALDA}║  ESTADO:               SISTEMA OPTIMIZADO Y SALUDABLE${NC}"
+echo -e "${ESMERALDA}║${NC}  🐧 ${BLANCO}KERNEL:               ${KERNEL}${NC}  ${ESMERALDA}║${NC}"
+echo -e "${ESMERALDA}║${NC}  🧠 ${BLANCO}RAM:                  ${RAM}${NC}  ${ESMERALDA}║${NC}"
+echo -e "${ESMERALDA}║${NC}  🌡️ ${BLANCO}TEMPERATURA CPU:      ${TEMP}${NC}  ${ESMERALDA}║${NC}"
+echo -e "${ESMERALDA}║${NC}  💽 ${BLANCO}DISCO:                ${DISCO_USO}${NC}  ${ESMERALDA}║${NC}"
+echo -e "${ESMERALDA}║${NC}  🛡️ ${BLANCO}SALUD DEL DISCO:      ${DISK_HEALTH}${NC}  ${ESMERALDA}║${NC}"
+echo -e "${ESMERALDA}║${NC}  ✨ ${BLANCO}ESPACIO RECUPERADO:   ${ESPACIO} MB${NC}  ${ESMERALDA}║${NC}"
+echo -e "${ESMERALDA}║${NC}  🏆 ${BLANCO}ESTADO:               SISTEMA OPTIMIZADO Y SALUDABLE${NC}  ${ESMERALDA}║${NC}"
 echo -e "${ESMERALDA}╚══════════════════════════════════════════════════════════════╝${NC}"
 
 read -p "Presione la tecla [ENTER] para cerrar esta ventana..."
