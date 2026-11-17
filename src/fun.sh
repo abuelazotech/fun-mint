@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-VERDE='\033[1;92m'; AZUL='\033[1;96m'; AMARILLO='\033[1;93m'; MAGENTA='\033[1;95m'; NC='\033[0m'
+VERDE='\033[1;92m'; AZUL='\033[1;96m'; AMARILLO='\033[1;93m'; ESMERALDA='\033[1;32m'; NC='\033[0m'
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -37,14 +37,23 @@ rm -rf ~/.cache/thumbnails/* 2>/dev/null
 DISCO_FIN=$(df -m / | awk 'NR==2 {print $4}')
 ESPACIO=$((DISCO_FIN - DISCO_INI))
 [ $ESPACIO -lt 0 ] && ESPACIO=0
+KERNEL=$(uname -r)
+RAM=$(free -h | awk '/^Mem:/ {print $3 " usadas de " $2}')
+DISCO_LIBRE=$(df -h / | awk 'NR==2 {print $4 " libres de " $2}')
+TEMP="N/A"
+if [ -f /sys/class/thermal/thermal_zone0/temp ]; then TEMP=$(( $(cat /sys/class/thermal/thermal_zone0/temp) / 1000 ))"°C"; fi
 
-echo -e "${VERDE}[7/7] Reporte de Salud...${NC}"
+echo -e "${VERDE}[7/7] Generando reporte...${NC}"
 
-echo -e "${MAGENTA}══════════════════════════════════════════════════════════════${NC}"
-echo -e "${MAGENTA}        REPORTE FINAL DE MANTENIMIENTO                        ${NC}"
-echo -e "${MAGENTA}══════════════════════════════════════════════════════════════${NC}"
-echo -e "${AZUL}Espacio recuperado: ${VERDE}${ESPACIO} MB${NC}"
-echo -e "${AZUL}Estado: ${VERDE}Sistema optimizado y saludable${NC}"
-echo -e "${MAGENTA}══════════════════════════════════════════════════════════════${NC}"
+echo -e "${ESMERALDA}╔══════════════════════════════════════════════════════════════╗${NC}"
+echo -e "${ESMERALDA}║       REPORTE FINAL DE MANTENIMIENTO Y SALUD                 ║${NC}"
+echo -e "${ESMERALDA}╠══════════════════════════════════════════════════════════════╣${NC}"
+echo -e "${ESMERALDA}║${NC} 🐧 KERNEL:  ${ESMERALDA}${KERNEL}${NC}"
+echo -e "${ESMERALDA}║${NC} 🧠 RAM:     ${ESMERALDA}${RAM}${NC}"
+echo -e "${ESMERALDA}║${NC} 💽 DISCO:   ${ESMERALDA}${DISCO_LIBRE}${NC}"
+echo -e "${ESMERALDA}║${NC} 🌡️ TEMP:    ${ESMERALDA}${TEMP}${NC}"
+echo -e "${ESMERALDA}║${NC} 💾 ESPACIO RECUPERADO: ${ESMERALDA}${ESPACIO} MB${NC}"
+echo -e "${ESMERALDA}║${NC} 🛡️ ESTADO:  ${ESMERALDA}SISTEMA OPTIMIZADO Y SALUDABLE${NC}"
+echo -e "${ESMERALDA}╚══════════════════════════════════════════════════════════════╝${NC}"
 
 read -p "Presione la tecla [ENTER] para cerrar esta ventana..."
