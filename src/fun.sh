@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-VERDE='\033[1;92m'; AZUL='\033[1;96m'; AMARILLO='\033[1;93m'; NC='\033[0m'
+VERDE='\033[1;92m'; AZUL='\033[1;96m'; AMARILLO='\033[1;93m'; MAGENTA='\033[1;95m'; NC='\033[0m'
 
 export DEBIAN_FRONTEND=noninteractive
 
 echo -e "${AMARILLO}Inserte su contraseña y presione Enter:${NC}"
-sudo -v || { echo "Error"; read -p "ENTER..."; exit 1; }
+sudo -v >/dev/null 2>&1 || { echo "Error"; read -p "ENTER..."; exit 1; }
 
 echo -e "${AMARILLO}Iniciando proceso de diagnóstico, actualización y optimización...${NC}"
 
@@ -39,8 +39,12 @@ ESPACIO=$((DISCO_FIN - DISCO_INI))
 [ $ESPACIO -lt 0 ] && ESPACIO=0
 
 echo -e "${VERDE}[7/7] Reporte de Salud...${NC}"
-echo -e "${AZUL}REPORTE FINAL DE MANTENIMIENTO${NC}"
+
+echo -e "${MAGENTA}══════════════════════════════════════════════════════════════${NC}"
+echo -e "${MAGENTA}        REPORTE FINAL DE MANTENIMIENTO                        ${NC}"
+echo -e "${MAGENTA}══════════════════════════════════════════════════════════════${NC}"
 echo -e "${AZUL}Espacio recuperado: ${VERDE}${ESPACIO} MB${NC}"
 echo -e "${AZUL}Estado: ${VERDE}Sistema optimizado y saludable${NC}"
+echo -e "${MAGENTA}══════════════════════════════════════════════════════════════${NC}"
 
 read -p "Presione la tecla [ENTER] para cerrar esta ventana..."
