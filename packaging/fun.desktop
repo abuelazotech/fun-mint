@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=FUN - El Abuelazo Tech
+Comment=🚀 Magia pura: Diagnóstico, reparación y optimización de Linux Mint en un solo clic.
+Exec=fun
+Icon=fun
+Terminal=true
+Type=Application
+Categories=System;Utility;
+StartupNotify=true

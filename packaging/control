@@ -1,0 +1,5 @@
+Package: fun
+Version: 2.0.0
+Architecture: amd64
+Maintainer: El Abuelazo Tech <abuelazotech@ejemplo.com>
+Description: Herramienta de diagnóstico, reparación y optimización ultrarrápida para Linux Mint.
