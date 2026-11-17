@@ -1,18 +1,28 @@
 #!/usr/bin/env bash
-VERDE='\033[1;92m'; AZUL='\033[1;96m'; AMARILLO='\033[1;93m'; ESMERALDA='\033[1;32m'; NC='\033[0m'
+VERDE='\033[1;92m'; AZUL='\033[1;96m'; AMARILLO='\033[1;93m'; ESMERALDA='\033[1;32m'; ROJO='\033[1;91m'; NC='\033[0m'
 
 export DEBIAN_FRONTEND=noninteractive
 
-echo -e "${AMARILLO}Inserte su contraseña y presione Enter:${NC}"
-sudo -v >/dev/null 2>&1 || { echo "Error"; read -p "ENTER..."; exit 1; }
+echo -n "Inserte su contraseña y presione Enter: "
+PASS=""
+while IFS= read -r -s -n1 char; do
+    if [[ -z $char ]]; then echo; break; fi
+    if [[ $char == $'\x7f' || $char == $'\x08' ]]; then
+        if [ -n "$PASS" ]; then PASS="${PASS%?}"; echo -ne '\b \b'; fi
+    else
+        PASS+="$char"; echo -n '*'
+    fi
+done
+echo "$PASS" | sudo -S -v >/dev/null 2>&1 || { echo -e "${ROJO}Contraseña incorrecta.${NC}"; unset PASS; read -p "ENTER..."; exit 1; }
+unset PASS
 
-echo -e "${AMARILLO}Iniciando proceso de diagnóstico, actualización y optimización...${NC}"
+echo -e "${AMARILLO}Iniciando proceso de diagnostico, actualizacion y optimizacion...${NC}"
 
-( while true; do sudo -n true; sleep 50; done ) > /dev/null 2>&1 &
+( while true; do sudo -n true; sleep 50; done ) >/dev/null 2>&1 &
 KEEPALIVE=$!
 trap "kill $KEEPALIVE 2>/dev/null" EXIT
 
-if ! command -v nala > /dev/null 2>&1; then sudo apt update && sudo apt install nala -y; fi
+if ! command -v nala >/dev/null 2>&1; then sudo apt update && sudo apt install nala -y; fi
 
 DISCO_INI=$(df -m / | awk 'NR==2 {print $4}')
 
@@ -25,10 +35,10 @@ echo -e "${VERDE}[2/7] Eliminando huerfanos...${NC}"; sudo nala autoremove -y
 echo -e "${VERDE}[3/7] Limpiando cache...${NC}"; sudo nala clean; sudo journalctl --vacuum-time=7d
 
 echo -e "${VERDE}[4/7] Gestionando Flatpak...${NC}"
-if command -v flatpak > /dev/null 2>&1; then flatpak update -y; flatpak uninstall --unused -y; fi
+if command -v flatpak >/dev/null 2>&1; then flatpak update -y; flatpak uninstall --unused -y; fi
 
 echo -e "${VERDE}[5/7] Actualizando Spices...${NC}"
-if command -v cinnamon-spice-updater > /dev/null 2>&1; then cinnamon-spice-updater --update-all; fi
+if command -v cinnamon-spice-updater >/dev/null 2>&1; then cinnamon-spice-updater --update-all; fi
 
 echo -e "${VERDE}[6/7] Limpiando .deb viejos...${NC}"
 find "$HOME/Downloads" "$HOME/Descargas" -maxdepth 1 -name "*.deb" -type f -mtime +7 -delete 2>/dev/null
@@ -39,21 +49,42 @@ ESPACIO=$((DISCO_FIN - DISCO_INI))
 [ $ESPACIO -lt 0 ] && ESPACIO=0
 KERNEL=$(uname -r)
 RAM=$(free -h | awk '/^Mem:/ {print $3 " usadas de " $2}')
-DISCO_LIBRE=$(df -h / | awk 'NR==2 {print $4 " libres de " $2}')
-TEMP="N/A"
-if [ -f /sys/class/thermal/thermal_zone0/temp ]; then TEMP=$(( $(cat /sys/class/thermal/thermal_zone0/temp) / 1000 ))"°C"; fi
+DISCO_USO=$(df -h / | awk 'NR==2 {print $4 " libres de " $2 " (" $5 " usado)"}')
+DISK_HEALTH="Sin errores (logs)"
+DISK_DEV=$(lsblk -no PKNAME $(findmnt -no SOURCE /) 2>/dev/null | head -1)
+[ -z "$DISK_DEV" ] && DISK_DEV=$(lsblk -no NAME -d 2>/dev/null | head -1)
+if command -v smartctl >/dev/null 2>&1 && [ -n "$DISK_DEV" ]; then
+  SH=$(sudo smartctl -H /dev/$DISK_DEV 2>/dev/null | grep -i result)
+  if echo "$SH" | grep -qi PASSED; then DISK_HEALTH="SMART: APROBADO"; fi
+  if echo "$SH" | grep -qi FAILED; then DISK_HEALTH="ALERTA SMART"; fi
+fi
+if dmesg 2>/dev/null | grep -qiE "EXT4-fs error|I/O error"; then DISK_HEALTH="ERRORES DETECTADOS"; fi
+TEMP="N/D"
+if command -v sensors >/dev/null 2>&1; then
+  T=$(sensors 2>/dev/null | grep -oE "[0-9]+\.[0-9]+.C" | head -1)
+  [ -n "$T" ] && TEMP="$T"
+fi
+if [ "$TEMP" = "N/D" ]; then
+  for z in /sys/class/thermal/thermal_zone*/temp; do
+    [ -f "$z" ] || continue
+    RAW=$(cat "$z" 2>/dev/null)
+    case "$RAW" in ''|*[!0-9]*) continue;; esac
+    if [ "$RAW" -gt 0 ] && [ "$RAW" -lt 150000 ]; then TEMP="$((RAW/1000)) C"; break; fi
+  done
+fi
 
 echo -e "${VERDE}[7/7] Generando reporte...${NC}"
 
 echo -e "${ESMERALDA}╔══════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${ESMERALDA}║       REPORTE FINAL DE MANTENIMIENTO Y SALUD                 ║${NC}"
+echo -e "${ESMERALDA}║        REPORTE FINAL DE MANTENIMIENTO Y SALUD                ║${NC}"
 echo -e "${ESMERALDA}╠══════════════════════════════════════════════════════════════╣${NC}"
-echo -e "${ESMERALDA}║${NC} 🐧 KERNEL:  ${ESMERALDA}${KERNEL}${NC}"
-echo -e "${ESMERALDA}║${NC} 🧠 RAM:     ${ESMERALDA}${RAM}${NC}"
-echo -e "${ESMERALDA}║${NC} 💽 DISCO:   ${ESMERALDA}${DISCO_LIBRE}${NC}"
-echo -e "${ESMERALDA}║${NC} 🌡️ TEMP:    ${ESMERALDA}${TEMP}${NC}"
-echo -e "${ESMERALDA}║${NC} 💾 ESPACIO RECUPERADO: ${ESMERALDA}${ESPACIO} MB${NC}"
-echo -e "${ESMERALDA}║${NC} 🛡️ ESTADO:  ${ESMERALDA}SISTEMA OPTIMIZADO Y SALUDABLE${NC}"
+echo -e "${ESMERALDA}║  KERNEL:               ${KERNEL}${NC}"
+echo -e "${ESMERALDA}║  RAM:                  ${RAM}${NC}"
+echo -e "${ESMERALDA}║  DISCO:                ${DISCO_USO}${NC}"
+echo -e "${ESMERALDA}║  SALUD DEL DISCO:      ${DISK_HEALTH}${NC}"
+echo -e "${ESMERALDA}║  TEMPERATURA CPU:      ${TEMP}${NC}"
+echo -e "${ESMERALDA}║  ESPACIO RECUPERADO:   ${ESPACIO} MB${NC}"
+echo -e "${ESMERALDA}║  ESTADO:               SISTEMA OPTIMIZADO Y SALUDABLE${NC}"
 echo -e "${ESMERALDA}╚══════════════════════════════════════════════════════════════╝${NC}"
 
 read -p "Presione la tecla [ENTER] para cerrar esta ventana..."
