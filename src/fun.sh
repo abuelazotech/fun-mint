@@ -22,6 +22,9 @@ echo -e "${AMARILLO}Iniciando proceso de diagnostico, actualizacion y optimizaci
 KEEPALIVE=$!
 trap "kill $KEEPALIVE 2>/dev/null" EXIT
 
+RESUMEN=/tmp/fun_resumen.txt
+: > "$RESUMEN"
+
 if ! command -v nala >/dev/null 2>&1; then sudo apt update && sudo apt install nala -y; fi
 
 DISCO_INI=$(df -m / | awk 'NR==2 {print $4}')
@@ -29,20 +32,24 @@ DISCO_INI=$(df -m / | awk 'NR==2 {print $4}')
 echo -e "${VERDE}[1/7] Actualizando sistema...${NC}"
 sudo nala update -o Acquire::Retries=1 -o Acquire::http::Timeout=10
 sudo nala upgrade -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold
+echo "✅ Sistema actualizado con Nala" >> "$RESUMEN"
 
 echo -e "${VERDE}[2/7] Eliminando huerfanos...${NC}"; sudo nala autoremove -y
+echo "✅ Paquetes huérfanos eliminados" >> "$RESUMEN"
 
 echo -e "${VERDE}[3/7] Limpiando cache...${NC}"; sudo nala clean; sudo journalctl --vacuum-time=7d
+echo "✅ Caché y logs antiguos limpiados" >> "$RESUMEN"
 
 echo -e "${VERDE}[4/7] Gestionando Flatpak...${NC}"
-if command -v flatpak >/dev/null 2>&1; then flatpak update -y; flatpak uninstall --unused -y; fi
+if command -v flatpak >/dev/null 2>&1; then flatpak update -y; flatpak uninstall --unused -y; echo "✅ Aplicaciones Flatpak actualizadas y limpiadas" >> "$RESUMEN"; fi
 
 echo -e "${VERDE}[5/7] Actualizando Spices...${NC}"
-if command -v cinnamon-spice-updater >/dev/null 2>&1; then cinnamon-spice-updater --update-all; fi
+if command -v cinnamon-spice-updater >/dev/null 2>&1; then cinnamon-spice-updater --update-all; echo "✅ Spices de Cinnamon actualizados" >> "$RESUMEN"; fi
 
 echo -e "${VERDE}[6/7] Limpiando .deb viejos...${NC}"
 find "$HOME/Downloads" "$HOME/Descargas" -maxdepth 1 -name "*.deb" -type f -mtime +7 -delete 2>/dev/null
 rm -rf ~/.cache/thumbnails/* 2>/dev/null
+echo "✅ Archivos .deb viejos y miniaturas limpiados" >> "$RESUMEN"
 
 DISCO_FIN=$(df -m / | awk 'NR==2 {print $4}')
 ESPACIO=$((DISCO_FIN - DISCO_INI))
@@ -76,15 +83,21 @@ fi
 echo -e "${VERDE}[7/7] Generando reporte...${NC}"
 
 echo -e "${ESMERALDA}╔══════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${ESMERALDA}║${NC}  ${BLANCO}✨ REPORTE FINAL DE MANTENIMIENTO Y SALUD ✨${NC}"
+printf "${ESMERALDA}║${NC}  ${BLANCO}✨ REPORTE FINAL DE MANTENIMIENTO Y SALUD ✨%36s${NC}${ESMERALDA}║${NC}\n" ""
 echo -e "${ESMERALDA}╠══════════════════════════════════════════════════════════════╣${NC}"
-echo -e "${ESMERALDA}║${NC}  🐧 ${BLANCO}KERNEL:               ${KERNEL}${NC}"
-echo -e "${ESMERALDA}║${NC}  🧠 ${BLANCO}RAM:                  ${RAM}${NC}"
-echo -e "${ESMERALDA}║${NC}  🌡️ ${BLANCO}TEMPERATURA CPU:      ${TEMP}${NC}"
-echo -e "${ESMERALDA}║${NC}  💽 ${BLANCO}DISCO:                ${DISCO_USO}${NC}"
-echo -e "${ESMERALDA}║${NC}  🛡️ ${BLANCO}SALUD DEL DISCO:      ${DISK_HEALTH}${NC}"
-echo -e "${ESMERALDA}║${NC}  ✨ ${BLANCO}ESPACIO RECUPERADO:   ${ESPACIO} MB${NC}"
-echo -e "${ESMERALDA}║${NC}  🏆 ${BLANCO}ESTADO:               SISTEMA OPTIMIZADO Y SALUDABLE${NC}"
+printf "${ESMERALDA}║${NC}  ${BLANCO}📋 OPERACIONES REALIZADAS:%33s${NC}${ESMERALDA}║${NC}\n" ""
+echo -e "${ESMERALDA}╠══════════════════════════════════════════════════════════════╣${NC}"
+while IFS= read -r line; do
+    printf "${ESMERALDA}║${NC}  ${BLANCO}%-55s${NC}${ESMERALDA}║${NC}\n" "$line"
+done < "$RESUMEN"
+echo -e "${ESMERALDA}╠══════════════════════════════════════════════════════════════╣${NC}"
+printf "${ESMERALDA}║${NC}  🐧 ${BLANCO}KERNEL: %-45s${NC}${ESMERALDA}║${NC}\n" "$KERNEL"
+printf "${ESMERALDA}║${NC}  🧠 ${BLANCO}RAM: %-47s${NC}${ESMERALDA}║${NC}\n" "$RAM"
+printf "${ESMERALDA}║${NC}  🌡️ ${BLANCO}TEMPERATURA CPU: %-40s${NC}${ESMERALDA}║${NC}\n" "$TEMP"
+printf "${ESMERALDA}║${NC}  💽 ${BLANCO}DISCO: %-46s${NC}${ESMERALDA}║${NC}\n" "$DISCO_USO"
+printf "${ESMERALDA}║${NC}  🛡️ ${BLANCO}SALUD DEL DISCO: %-39s${NC}${ESMERALDA}║${NC}\n" "$DISK_HEALTH"
+printf "${ESMERALDA}║${NC}  ✨ ${BLANCO}ESPACIO RECUPERADO: %-34s${NC}${ESMERALDA}║${NC}\n" "${ESPACIO} MB"
+printf "${ESMERALDA}║${NC}  🏆 ${BLANCO}ESTADO: %-44s${NC}${ESMERALDA}║${NC}\n" "SISTEMA OPTIMIZADO Y SALUDABLE"
 echo -e "${ESMERALDA}╚══════════════════════════════════════════════════════════════╝${NC}"
 
 read -p "Presione la tecla [ENTER] para cerrar esta ventana..."
