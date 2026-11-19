@@ -136,7 +136,7 @@ Los reportes que hayas guardado en el Escritorio no se eliminan: son tus archivo
 | El icono no aparece | `sudo gtk-update-icon-cache /usr/share/icons/hicolor/` y vuelve a iniciar sesión. |
 | No se puede descargar el paquete | Usa el enlace directo de la sección Instalación desde el navegador. |
 | Falló la verificación SHA256 | No instalés ese archivo: descárgalo de nuevo desde Releases. |
-| FUN no aparece en el Gestor de Software | Ejecuta el script de la Opción 1 para añadir el repositorio apt, cierra y abre el Gestor. |
+| FUN no aparece en el Gestor de Software | Ejecuta el script de la Opción 1: regenera la caché de `mintinstall` y registra FUN en *Instalados*. Si ya corriste el script, repite solo `mintinstall-update-pkgcache.py` y reabre el Gestor. |
 | No aparece la captura en el Gestor de Software | Ejecuta `bash instalar-fun.sh --reinstall` y luego `sudo appstreamcli refresh --force`; reinicia el Gestor de Software y comprueba tu conexión (la imagen se sirve desde este repositorio). |
 
 ---
