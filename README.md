@@ -7,7 +7,7 @@
 - ✅ Modo simulación para ver qué hará antes de ejecutarlo.
 - ✅ Reporte de salud en pantalla y, si quieres, en tu Escritorio.
 
-![Vista previa de FUN](preview.png)
+![Vista previa de FUN](assets/preview.png)
 
 ---
 
@@ -124,7 +124,7 @@ Los reportes que hayas guardado en el Escritorio no se eliminan: son tus archivo
 | `src/instalar-fun-gui.sh` | Instalador con ventanas (zenity + pkexec). |
 | `build.sh` | Construye `fun_1.2.0-1_amd64.deb` con permisos y propietario correctos. |
 | `packaging/` | Metadatos Debian: `control`, `changelog`, `copyright`, `postinst`, `fun.desktop` y `fun.appdata.xml` (captura del Gestor de Software). |
-| `assets/` | Iconos 256x256 y 1024x1024, y `captura.png` mostrada en el Gestor de Software. |
+| `assets/` | Iconos 256x256 y 1024x1024, `preview.png` del README y `captura.png` mostrada en el Gestor de Software. |
 | `LICENSE` | Texto completo de GPL-3.0. |
 
 ---
