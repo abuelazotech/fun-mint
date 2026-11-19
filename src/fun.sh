@@ -20,6 +20,8 @@ usage() {
     echo "  --dry-run   Muestra las acciones previstas sin modificar el sistema"
     echo "  --version   Muestra la versión instalada"
     echo "  --help      Muestra esta ayuda"
+    echo ""
+    echo "Reporta errores: https://github.com/abuelazotech/fun-mint/issues/new/choose"
 }
 
 case "${1:-}" in

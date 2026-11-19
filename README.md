@@ -141,6 +141,21 @@ Los reportes que hayas guardado en el Escritorio no se eliminan: son tus archivo
 | `packaging/` | Metadatos Debian: `control`, `changelog`, `copyright`, `postinst`, `fun.desktop` y `fun.appdata.xml` (captura del Gestor de Software). |
 | `assets/` | Iconos 256x256 y 1024x1024, `preview.png` del README y `captura.png` mostrada en el Gestor de Software. |
 | `LICENSE` | Texto completo de GPL-3.0. |
+| `.github/ISSUE_TEMPLATE/` | Plantillas para reportar errores y sugerir mejoras. |
+
+---
+
+## 🐞 Reportar un error o sugerir una mejora
+
+¿FUN no hizo lo que esperabas? Abre un reporte con plantilla: **[Nuevo issue](https://github.com/abuelazotech/fun-mint/issues/new/choose)**.
+
+Incluye, si puedes:
+
+- La salida de `fun --version` y de `fun --dry-run`.
+- Tu versión de Linux Mint (`cat /etc/os-release`).
+- Qué esperabas que pasara y qué ocurrió en realidad.
+
+También puedes escribir `fun --help` en la terminal: ahí está el mismo enlace.
 
 ---
 

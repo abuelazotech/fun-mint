@@ -11,7 +11,7 @@ VERSION="1.2.0"
 DEB_VERSION="1.2.0-1"
 DEB_NAME="fun_${DEB_VERSION}_amd64.deb"
 DEB_URL="https://github.com/abuelazotech/fun-mint/releases/download/${DEB_VERSION}/${DEB_NAME}"
-DEB_SHA256="b3b7706dc67abb2b3282d5e51a14266db0a34997de8dae2c8b933a0d6f635e86"
+DEB_SHA256="2b3b09854d1c87b3e3da527b739d6759d71bf5ef54706819d15833674cc9e04d"
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname -- "$SCRIPT_DIR")"
