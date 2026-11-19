@@ -152,6 +152,8 @@ Los reportes que hayas guardado en el Escritorio no se eliminan: son tus archivo
 | `build.sh` | Construye `fun_1.2.0-1_amd64.deb` con permisos y propietario correctos. |
 | `tools/actualizar-repo.sh` | Regenera y firma el repositorio apt al publicar una versión. |
 | `docs/apt/` | Repositorio apt publicado en `https://abuelazotech.github.io/fun-mint/apt`. |
+| `ppa/debian/` | Metadatos Debian para construir el paquete fuente del PPA. |
+| `tools/preparar-ppa.sh` | Genera y firma el paquete fuente para Launchpad. |
 | `packaging/` | Metadatos Debian: `control`, `changelog`, `copyright`, `postinst`, `fun.desktop` y `fun.appdata.xml` (captura del Gestor de Software). |
 | `assets/` | Iconos 256x256 y 1024x1024, `preview.png` del README y `captura.png` mostrada en el Gestor de Software. |
 | `LICENSE` | Texto completo de GPL-3.0. |
@@ -170,6 +172,30 @@ Incluye, si puedes:
 - Qué esperabas que pasara y qué ocurrió en realidad.
 
 También puedes escribir `fun --help` en la terminal: ahí está el mismo enlace.
+
+---
+
+## 🚀 Publicar en PPA (para mantenedores)
+
+El repositorio incluye `ppa/debian/` y `tools/preparar-ppa.sh` para generar un paquete fuente firmado listo para Launchpad.
+
+```bash
+sudo apt install dput
+gpg --keyserver keyserver.ubuntu.com --send-keys B075A1B11956EE1B427AE26202ACB4742E42E79E
+./tools/preparar-ppa.sh noble
+./tools/preparar-ppa.sh jammy
+dput ppa:abuelazotech/fun /tmp/fun-ppa-build/fun_1.2.0-1_source.changes
+```
+
+Antes de subir: crea el PPA en Launchpad e importa la clave pública en tu cuenta (Launchpad la descarga del servidor de claves). Repite el `dput` con el `.changes` de cada serie si quieres Mint 21 y 22.
+
+Una vez publicado, cualquier usuario puede instalarlo con:
+
+```bash
+sudo add-apt-repository ppa:abuelazotech/fun
+sudo apt update
+sudo apt install fun
+```
 
 ---
 
