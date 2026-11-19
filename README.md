@@ -35,14 +35,24 @@ Al ejecutarlo realiza 7 pasos, con el estado de cada uno al final:
 
 ## 📥 Instalación
 
-### Opción 1 — Paquete `.deb` (recomendada, en 2 clics)
+### Opción 1 — Repositorio apt (recomendado; aparece en el Gestor de Software)
+
+Añade la clave y el repositorio firmado, actualiza apt e instala FUN:
+
+```bash
+curl -fsSL https://github.com/abuelazotech/fun-mint/raw/refs/heads/main/src/agregar-repo.sh -o /tmp/agregar-repo.sh && bash /tmp/agregar-repo.sh
+```
+
+Después busca **FUN - El Abuelazo Tech** en el Gestor de Software o en el menú. Las futuras versiones llegarán con `apt update`.
+
+### Opción 2 — Paquete `.deb` (en 2 clics)
 
 1. Descarga [**fun_1.2.0-1_amd64.deb**](https://github.com/abuelazotech/fun-mint/releases/download/1.2.0-1/fun_1.2.0-1_amd64.deb).
 2. Haz doble clic y pulsa **Instalar** en el Gestor de Software de Linux Mint.
 
 Después busca **FUN - El Abuelazo Tech** en el menú o escribe `fun` en la terminal.
 
-### Opción 2 — Un solo comando en la terminal
+### Opción 3 — Un solo comando en la terminal
 
 Descarga el instalador, verifica la suma SHA256 del paquete y lo instala:
 
@@ -58,7 +68,7 @@ curl -fsSL https://raw.githubusercontent.com/abuelazotech/fun-mint/main/src/inst
 
 Si lo prefieres sin `curl`, descarga `instalar-fun.sh` desde este repositorio y ejecútalo con `bash instalar-fun.sh`.
 
-### Opción 3 — Desde el código fuente
+### Opción 4 — Desde el código fuente
 
 ```bash
 git clone https://github.com/abuelazotech/fun-mint.git
@@ -126,6 +136,7 @@ Los reportes que hayas guardado en el Escritorio no se eliminan: son tus archivo
 | El icono no aparece | `sudo gtk-update-icon-cache /usr/share/icons/hicolor/` y vuelve a iniciar sesión. |
 | No se puede descargar el paquete | Usa el enlace directo de la sección Instalación desde el navegador. |
 | Falló la verificación SHA256 | No instalés ese archivo: descárgalo de nuevo desde Releases. |
+| FUN no aparece en el Gestor de Software | Ejecuta el script de la Opción 1 para añadir el repositorio apt, cierra y abre el Gestor. |
 | No aparece la captura en el Gestor de Software | Ejecuta `bash instalar-fun.sh --reinstall` y luego `sudo appstreamcli refresh --force`; reinicia el Gestor de Software y comprueba tu conexión (la imagen se sirve desde este repositorio). |
 
 ---
@@ -137,7 +148,10 @@ Los reportes que hayas guardado en el Escritorio no se eliminan: son tus archivo
 | `src/fun.sh` | Comando `fun`: los 7 pasos y el reporte de salud. |
 | `src/instalar-fun.sh` | Instalador de terminal: descarga, verifica, reinstala y desinstala (`--reinstall`, `--uninstall`). |
 | `src/instalar-fun-gui.sh` | Instalador con ventanas (zenity + pkexec), también con `--uninstall`. |
+| `src/agregar-repo.sh` | Añade el repositorio apt firmado y la clave a Linux Mint. |
 | `build.sh` | Construye `fun_1.2.0-1_amd64.deb` con permisos y propietario correctos. |
+| `tools/actualizar-repo.sh` | Regenera y firma el repositorio apt al publicar una versión. |
+| `docs/apt/` | Repositorio apt publicado en `https://abuelazotech.github.io/fun-mint/apt`. |
 | `packaging/` | Metadatos Debian: `control`, `changelog`, `copyright`, `postinst`, `fun.desktop` y `fun.appdata.xml` (captura del Gestor de Software). |
 | `assets/` | Iconos 256x256 y 1024x1024, `preview.png` del README y `captura.png` mostrada en el Gestor de Software. |
 | `LICENSE` | Texto completo de GPL-3.0. |

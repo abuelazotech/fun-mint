@@ -1,0 +1,16 @@
+Package: fun
+Version: 1.2.0-1
+Architecture: amd64
+Maintainer: El Abuelazo Tech <abuelazo@protonmail.com>
+Installed-Size: 1250
+Depends: nala
+Filename: pool/main/f/fun/fun_1.2.0-1_amd64.deb
+Size: 1224256
+MD5sum: ac637d6580e7e4e9c3b850ef1f8f74b7
+SHA1: 288019a913963dc4525d91fd754d3bb0d0131242
+SHA256: 2b3b09854d1c87b3e3da527b739d6759d71bf5ef54706819d15833674cc9e04d
+Section: utils
+Priority: optional
+Description: Mantenimiento y salud para Linux Mint (FUN)
+ Actualiza el sistema, limpia cachés y muestra un informe de salud.
+

@@ -1,0 +1,37 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Architectures: amd64
+Codename: stable
+Components: main
+Date: Thu, 19 Nov 2026 21:53:50 +0000
+Description: Repositorio apt de FUN para Linux Mint
+Label: FUN
+Origin: El Abuelazo Tech
+Suite: stable
+MD5Sum:
+ c87fc8f99254c9c61f167b6ac1c18dae              524 main/binary-amd64/Packages
+ 09e60e94c65316f46624de6c35f68225              406 main/binary-amd64/Packages.gz
+SHA1:
+ 8f43f989b30300870b25feda3cac20d3885528ac              524 main/binary-amd64/Packages
+ 8d7f9cfd8033590a1849a5cf03ba2181fe9c8686              406 main/binary-amd64/Packages.gz
+SHA256:
+ 32298396aea630c53387b3a68f0221b478055e8e47ed49b836c59261f4f81709              524 main/binary-amd64/Packages
+ bacfc85f2af6172785950d3e819b9e6cc9ac64242a6d952c9d97b7e6f3e75772              406 main/binary-amd64/Packages.gz
+SHA512:
+ 814e994026f5a93ddb8a0c728bfa503d2bb8d04c31cc3f235d2b138b8d1e500012e81c7855200893b0af1aadfd078c5e4dadb5ad666610cd26193b6392803b49              524 main/binary-amd64/Packages
+ 4045b58822f4ddd5250e44eaee71c980732ee05abcc308f9ede35f5d97e145e20492390fc441e333a878253aeac2af039d81839f5c2fb34fdf65057560f8674c              406 main/binary-amd64/Packages.gz
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCgAdFiEEsHWhsRlW7htCeuJiAqy0dC5C554FAmr/b+8ACgkQAqy0dC5C
+554kdwv7B6MEZ2gUjCh6OKHd/SUd6eSh4QhKvSon9mitotfgJyBBT0h+a8sXTNQ/
+FWmYgJ9twKjehBcykN78vBh6PyG7lVNWsvwhhg2t4J0CJ4yZdP1ScjCGzP8zBExT
+TmQ848Ladh3rxnJf3xrd+/gQsJrwNY0Qd8ly6otCYeNAPOwoZxZT2Z6BHi3SZMYE
+3xCVyjS5OxCf8a5dOyk/FbWbO8g5PEDayRs5U0nsbJ2Q+3S23JJdSpvHUfELG5yR
+R8v+hFq+IcJdRGEV2V9x7mbKtZYluukYBDdZEA2HBT7TGq0GRffKSmXMJw19UwR2
+ZMx3+bshCpO4xi/ol/dHMsFBjTAtRVAJfzphsYAxqB7RUNX5IjU5g4C9mGvoxYiX
+6LPFdAcwYy+oaZp4f+4If4XJOAAdRIcrv1xqB7Wa48RJY4S5EV8ITc0v1dyB7Ae3
+6DTqXRyYFP7vM+1+XnsXFX72mzk68Ax3H3ZeXFV98XGNkx49RWkqWW8Fg/M3q8Zl
+ZPVt6jSL
+=MtLA
+-----END PGP SIGNATURE-----
