@@ -1,0 +1,20 @@
+#!/usr/bin/make -f
+
+clean:
+	rm -rf debian/fun
+
+%:
+	dh $@
+
+override_dh_auto_build:
+
+override_dh_auto_test:
+
+override_dh_install:
+	install -D -m 755 src/fun.sh debian/fun/usr/bin/fun
+	install -D -m 644 assets/fun-256.png debian/fun/usr/share/icons/hicolor/256x256/apps/fun.png
+	install -D -m 644 assets/fun.png debian/fun/usr/share/icons/hicolor/1024x1024/apps/fun.png
+	install -D -m 644 packaging/fun.desktop debian/fun/usr/share/applications/fun.desktop
+	install -D -m 644 packaging/fun.appdata.xml debian/fun/usr/share/metainfo/fun.appdata.xml
+	install -D -m 644 packaging/copyright debian/fun/usr/share/doc/fun/copyright
+	dh_install
