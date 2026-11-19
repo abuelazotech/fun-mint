@@ -19,6 +19,7 @@ sed -i "s/) noble;/) $SERIE;/" "$SALIDA/fun-$ORIG/debian/changelog"
 
 cd "$SALIDA"
 dpkg-source -b "fun-$ORIG"
+cd "$SALIDA/fun-$ORIG"
 dpkg-buildpackage -S -k"$FPR"
 
 echo "Paquetes fuente en: $SALIDA"
