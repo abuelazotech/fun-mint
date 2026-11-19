@@ -1,5 +1,6 @@
 .aider*
 *.deb
+!docs/apt/pool/main/f/fun/*.deb
 fun-builder/
 instalar-fun.desktop
 ruta/
