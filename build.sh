@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Nombre: FUN v2 - Constructor del paquete .deb
+# Nombre: FUN v1.2.0 - Constructor del paquete .deb
 # Autor: El Abuelazo Tech
 # Versión: 1.2.0
 # ==============================================================================

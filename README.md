@@ -7,7 +7,8 @@
 - ✅ Modo simulación para ver qué hará antes de ejecutarlo.
 - ✅ Reporte de salud en pantalla y, si quieres, en tu Escritorio.
 
-![Vista previa de FUN](preview.png)
+![Captura de FUN en la terminal](assets/captura.png)
+*(captura realizada en la terminal Wave)*
 
 ---
 
