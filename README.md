@@ -7,8 +7,7 @@
 - ✅ Modo simulación para ver qué hará antes de ejecutarlo.
 - ✅ Reporte de salud en pantalla y, si quieres, en tu Escritorio.
 
-![Captura de FUN en la terminal](assets/captura.png)
-*(captura realizada en la terminal Wave)*
+![Vista previa de FUN](preview.png)
 
 ---
 
@@ -112,6 +111,7 @@ Los reportes que hayas guardado en el Escritorio no se eliminan: son tus archivo
 | El icono no aparece | `sudo gtk-update-icon-cache /usr/share/icons/hicolor/` y vuelve a iniciar sesión. |
 | No se puede descargar el paquete | Usa el enlace directo de la sección Instalación desde el navegador. |
 | Falló la verificación SHA256 | No instalés ese archivo: descárgalo de nuevo desde Releases. |
+| No aparece la captura en el Gestor de Software | Ejecuta `sudo appstreamcli refresh --force`, reinicia el Gestor de Software y comprueba tu conexión (la imagen se sirve desde este repositorio). |
 
 ---
 
@@ -123,8 +123,8 @@ Los reportes que hayas guardado en el Escritorio no se eliminan: son tus archivo
 | `src/instalar-fun.sh` | Instalador de terminal, con descarga y verificación del paquete. |
 | `src/instalar-fun-gui.sh` | Instalador con ventanas (zenity + pkexec). |
 | `build.sh` | Construye `fun_1.2.0-1_amd64.deb` con permisos y propietario correctos. |
-| `packaging/` | Metadatos Debian: `control`, `changelog`, `copyright`, `postinst`, `fun.desktop`. |
-| `assets/` | Iconos 256x256 y 1024x1024. |
+| `packaging/` | Metadatos Debian: `control`, `changelog`, `copyright`, `postinst`, `fun.desktop` y `fun.appdata.xml` (captura del Gestor de Software). |
+| `assets/` | Iconos 256x256 y 1024x1024, y `captura.png` mostrada en el Gestor de Software. |
 | `LICENSE` | Texto completo de GPL-3.0. |
 
 ---

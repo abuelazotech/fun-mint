@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>fun.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>FUN - El Abuelazo Tech</name>
+  <summary>Mantenimiento, limpieza y diagnóstico de salud para Linux Mint</summary>
+  <description>
+    <p>FUN actualiza el sistema, elimina dependencias huérfanas, limpia cachés y muestra un reporte de salud del equipo.</p>
+  </description>
+  <developer id="com.github.abuelazotech">
+    <name>El Abuelazo Tech</name>
+  </developer>
+  <launchable type="desktop-id">fun.desktop</launchable>
+  <url type="homepage">https://github.com/abuelazotech/fun-mint</url>
+  <url type="bugtracker">https://github.com/abuelazotech/fun-mint/issues</url>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/abuelazotech/fun-mint/main/assets/captura.png</image>
+    </screenshot>
+  </screenshots>
+  <releases>
+    <release version="1.2.0" date="2026-11-19">
+      <description>
+        <p>Versión 1.2.0: comando independiente del instalador, verificación SHA256 y diagnóstico con versión correcta.</p>
+      </description>
+    </release>
+  </releases>
+  <content_rating type="oars-1.1"/>
+</component>

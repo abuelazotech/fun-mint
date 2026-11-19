@@ -25,6 +25,7 @@ install -d -m 755 "$BUILD_DIR/usr/share/applications"
 install -d -m 755 "$BUILD_DIR/usr/share/doc/fun"
 install -d -m 755 "$BUILD_DIR/usr/share/icons/hicolor/256x256/apps"
 install -d -m 755 "$BUILD_DIR/usr/share/icons/hicolor/1024x1024/apps"
+install -d -m 755 "$BUILD_DIR/usr/share/metainfo"
 
 echo "📦 3. Copiando archivos a sus ubicaciones..."
 install -m 755 src/fun.sh "$BUILD_DIR/usr/bin/fun"
@@ -34,6 +35,7 @@ install -m 644 packaging/fun.desktop "$BUILD_DIR/usr/share/applications/fun.desk
 install -m 644 packaging/control "$BUILD_DIR/DEBIAN/control"
 install -m 755 packaging/postinst "$BUILD_DIR/DEBIAN/postinst"
 install -m 644 packaging/copyright "$BUILD_DIR/usr/share/doc/fun/copyright"
+install -m 644 packaging/fun.appdata.xml "$BUILD_DIR/usr/share/metainfo/fun.appdata.xml"
 gzip -9 -n -c packaging/changelog > "$BUILD_DIR/usr/share/doc/fun/changelog.gz"
 chmod 644 "$BUILD_DIR/usr/share/doc/fun/changelog.gz"
 
