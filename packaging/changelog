@@ -1,0 +1,24 @@
+fun (1.2.0-1) unstable; urgency=medium
+
+  * Separa el comando `fun` del instalador: la primera ejecución ya no copia
+    el instalador ni modifica el PATH del usuario.
+  * Añade --help, --version y --dry-run para usar FUN con más confianza.
+  * Instala el icono 256x256 correcto, con permisos y propietario root.
+  * Elimina las copias heredadas de /usr/local/bin y ~/.local/bin al actualizar.
+  * Detecta claves GPG faltantes sin importarlas automáticamente.
+  * Alinea documentación, licencia GPL-3.0 y metadatos del paquete.
+
+ -- El Abuelazo Tech <abuelazo@protonmail.com>  Thu, 19 Nov 2026 12:00:00 +0000
+
+fun (1.1-1) unstable; urgency=medium
+
+  * Reporte de salud, cálculo de espacio recuperado y aviso del Gestor
+    de Actualizaciones cuando quedan pendientes reales.
+
+ -- El Abuelazo Tech <abuelazo@protonmail.com>  Mon, 16 Nov 2026 19:00:00 +0000
+
+fun (1.0-1) unstable; urgency=medium
+
+  * Primera versión pública del script de mantenimiento.
+
+ -- El Abuelazo Tech <abuelazo@protonmail.com>  Sat, 14 Nov 2026 18:00:00 +0000

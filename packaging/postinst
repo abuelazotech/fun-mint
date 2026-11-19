@@ -1,0 +1,17 @@
+#!/bin/sh
+set -e
+
+SUDO_HOME=""
+if [ -n "${SUDO_USER:-}" ]; then
+    SUDO_HOME=$(getent passwd "$SUDO_USER" 2>/dev/null | cut -d: -f6 || true)
+fi
+
+for copia in /usr/local/bin/fun /root/.local/bin/fun \
+             "$SUDO_HOME/.local/bin/fun" /home/*/.local/bin/fun; do
+    [ -f "$copia" ] || continue
+    if grep -q 'FUN_BIN_DIR=' "$copia" 2>/dev/null; then
+        rm -f "$copia"
+    fi
+done
+
+exit 0

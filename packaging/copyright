@@ -1,0 +1,13 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: FUN
+Upstream-Contact: El Abuelazo Tech <abuelazo@protonmail.com>
+Source: https://github.com/abuelazotech/fun-mint
+
+Files: *
+Copyright: 2026 El Abuelazo Tech
+License: GPL-3+
+ FUN es software libre: puedes redistribuirlo y/o modificarlo bajo los
+ términos de la GNU General Public License, versión 3 o posterior.
+ .
+ En sistemas Debian, Ubuntu y Linux Mint el texto completo está disponible
+ en /usr/share/common-licenses/GPL-3 y en el archivo LICENSE del repositorio.

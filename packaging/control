@@ -1,5 +1,10 @@
 Package: fun
-Version: 2.0.0
+Version: 1.2.0-1
 Architecture: amd64
-Maintainer: El Abuelazo Tech <abuelazotech@ejemplo.com>
-Description: Herramienta de diagnóstico, reparación y optimización ultrarrápida para Linux Mint.
+Maintainer: El Abuelazo Tech <abuelazo@protonmail.com>
+Section: utils
+Priority: optional
+Depends: nala
+Installed-Size: 1250
+Description: Mantenimiento y salud para Linux Mint (FUN)
+ Actualiza el sistema, limpia cachés y muestra un informe de salud.
