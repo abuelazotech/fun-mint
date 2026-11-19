@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 SERIE="${1:-noble}"
 RAIZ="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-SALIDA="${TMPDIR:-/tmp}/fun-ppa-build"
+SALIDA="${TMPDIR:-/tmp}/fun-ppa-build/$SERIE"
 VERSION="1.2.0-1"
 ORIG="1.2.0"
 FPR="B075A1B11956EE1B427AE26202ACB4742E42E79E"

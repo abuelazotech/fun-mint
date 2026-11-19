@@ -184,10 +184,11 @@ sudo apt install dput
 gpg --keyserver keyserver.ubuntu.com --send-keys B075A1B11956EE1B427AE26202ACB4742E42E79E
 ./tools/preparar-ppa.sh noble
 ./tools/preparar-ppa.sh jammy
-dput ppa:abuelazotech/fun /tmp/fun-ppa-build/fun_1.2.0-1_source.changes
+dput ppa:abuelazotech/fun /tmp/fun-ppa-build/noble/fun_1.2.0-1_source.changes
+dput ppa:abuelazotech/fun /tmp/fun-ppa-build/jammy/fun_1.2.0-1_source.changes
 ```
 
-Antes de subir: crea el PPA en Launchpad e importa la clave pública en tu cuenta (Launchpad la descarga del servidor de claves). Repite el `dput` con el `.changes` de cada serie si quieres Mint 21 y 22.
+Antes de subir: crea el PPA en Launchpad e importa la clave pública en tu cuenta (Launchpad la descarga del servidor de claves). Cada serie queda en su propia carpeta.
 
 Una vez publicado, cualquier usuario puede instalarlo con:
 
