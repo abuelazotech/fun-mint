@@ -93,7 +93,7 @@ if zenity --question --title="Instalar FUN v$VERSION" \
             RESULTADO=0
         fi
     else
-        if pkexec /usr/bin/apt install -y "$DEB_FILE"; then
+        if pkexec /usr/bin/apt install -y --allow-downgrades "$DEB_FILE"; then
             if [ "$ACCION" = "actualizar" ]; then
                 OPERACION="Actualización completada."
             else

@@ -41,7 +41,7 @@ case "${1:-}" in
         echo "Origen local: $DEB_LOCAL"
         echo "Si no existe, se descarga de: $DEB_URL"
         echo "Suma esperada: $DEB_SHA256"
-        echo "Acción: apt install -y $DEB_FILE"
+        echo "Acción: apt install -y --allow-downgrades $DEB_FILE"
         exit 0
         ;;
     "") ;;
@@ -86,9 +86,9 @@ echo -e "${VERDE}✅ Paquete verificado (SHA256 correcto).${NC}"
 
 echo -e "${AZUL_CLARO}⚙️  Instalando FUN v$VERSION...${NC}"
 if (( EUID == 0 )); then
-    apt install -y "$DEB_FILE"
+    apt install -y --allow-downgrades "$DEB_FILE"
 else
-    sudo apt install -y "$DEB_FILE"
+    sudo apt install -y --allow-downgrades "$DEB_FILE"
 fi
 
 echo ""
