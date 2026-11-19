@@ -37,10 +37,7 @@ case "${1:-}" in
         echo -e "7. Borrar archivos .deb viejos (+7 días) de Descargas."
         echo -e "8. Mostrar un reporte de salud con el estado real de cada paso."
         echo -e "\n${VERDE}✅ Simulación terminada. El sistema no ha sido modificado.${NC}\n"
-echo -e "${VERDE}🏁 Diagnóstico finalizado con FUN v1.2.0 - El Abuelazo Tech${NC}"
-echo ""
-
-read -r -p "Presiona Enter para salir..." || true
+        read -r -p "Presiona Enter para salir..." || true
         exit 0
         ;;
     -h|--help) usage; exit 0 ;;
@@ -302,5 +299,8 @@ if [ "$PENDING_UPDATES" -gt 0 ]; then
         echo -e "${AMARILLO}Hay $PENDING_UPDATES actualizaciones pendientes. Abre el Gestor de Actualizaciones cuando quieras.${NC}"
     fi
 fi
+
+echo -e "${VERDE}🏁 Diagnóstico finalizado con FUN v1.2.0 - El Abuelazo Tech${NC}"
+echo ""
 
 read -r -p "Presiona Enter para salir..." || true
