@@ -24,45 +24,91 @@ AMARILLO=$(tput setaf 11 2>/dev/null || true); [ -z "$AMARILLO" ] && AMARILLO='\
 ROJO=$(tput setaf 1 2>/dev/null || true); [ -z "$ROJO" ] && ROJO='\033[1;91m'
 NC=$(tput sgr0 2>/dev/null || true); [ -z "$NC" ] && NC='\033[0m'
 
+MODO="install"
+SIMULAR=0
+
 usage() {
     echo "Instalador de FUN v$VERSION (paquete $DEB_VERSION)"
-    echo "Uso: instalar-fun.sh [--dry-run|--version|--help]"
-    echo "  --dry-run   Muestra qué haría sin descargar ni instalar"
-    echo "  --version   Muestra la versión del instalador"
-    echo "  --help      Muestra esta ayuda"
+    echo "Uso: instalar-fun.sh [--reinstall|--uninstall|--dry-run|--version|--help]"
+    echo "  --reinstall  Instala de nuevo aunque ya estés en la misma versión"
+    echo "  --uninstall  Desinstala FUN del sistema"
+    echo "  --dry-run    Muestra qué haría sin descargar ni modificar nada"
+    echo "  --version    Muestra la versión del instalador"
+    echo "  --help       Muestra esta ayuda"
 }
 
-case "${1:-}" in
-    -h|--help) usage; exit 0 ;;
-    -V|--version) echo "Instalador FUN v$VERSION"; exit 0 ;;
-    --dry-run)
-        echo -e "${AMARILLO}🔍 SIMULACIÓN: no se descargará ni instalará nada.${NC}"
+for argumento in "$@"; do
+    case "$argumento" in
+        --reinstall) MODO="reinstall" ;;
+        --uninstall) MODO="uninstall" ;;
+        --dry-run) SIMULAR=1 ;;
+        -V|--version) echo "Instalador FUN v$VERSION"; exit 0 ;;
+        -h|--help) usage; exit 0 ;;
+        *) echo -e "${ROJO}Opción desconocida: $argumento${NC}" >&2; usage >&2; exit 2 ;;
+    esac
+done
+
+INSTALADO=$(dpkg-query -W -f='${Version}' fun 2>/dev/null || true)
+APT_CMD=(apt install -y --allow-downgrades)
+if [[ "$MODO" = "reinstall" ]] || [[ "$INSTALADO" = "$DEB_VERSION" ]]; then
+    APT_CMD+=(--reinstall)
+fi
+APT_CMD+=("$DEB_FILE")
+
+if (( SIMULAR )); then
+    echo -e "${AMARILLO}🔍 SIMULACIÓN: no se descargará ni modificará nada.${NC}"
+    if [[ "$MODO" = "uninstall" ]]; then
+        echo "Versión instalada: ${INSTALADO:-ninguna}"
+        echo "Acción: apt remove -y fun"
+    else
         echo "Paquete: $DEB_NAME"
         echo "Origen local: $DEB_LOCAL"
         echo "Si no existe, se descarga de: $DEB_URL"
         echo "Suma esperada: $DEB_SHA256"
-        echo "Acción: apt install -y --allow-downgrades $DEB_FILE"
-        exit 0
-        ;;
-    "") ;;
-    *) echo -e "${ROJO}Opción desconocida: $1${NC}" >&2; usage >&2; exit 2 ;;
-esac
-
-if (( $# > 1 )); then
-    echo -e "${ROJO}Demasiados argumentos.${NC}" >&2
-    usage >&2
-    exit 2
+        echo "Acción: ${APT_CMD[*]}"
+    fi
+    exit 0
 fi
 
 if [[ $EUID -ne 0 ]]; then
-    echo -e "${AMARILLO}🔐 Se pedirá tu contraseña una sola vez para instalar.${NC}"
+    echo -e "${AMARILLO}🔐 Se pedirá tu contraseña una sola vez.${NC}"
     sudo -v || { echo -e "${ROJO}No se obtuvieron permisos de administrador.${NC}" >&2; exit 1; }
+fi
+
+if [[ "$MODO" = "uninstall" ]]; then
+    if [[ -z "$INSTALADO" ]]; then
+        echo -e "${AMARILLO}FUN no está instalado. Nada que desinstalar.${NC}"
+        exit 0
+    fi
+    if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+        zenity --question --title="Desinstalar FUN" \
+            --text="¿Quieres desinstalar FUN $INSTALADO?" \
+            --ok-label="Desinstalar" --cancel-label="Cancelar" 2>/dev/null || exit 0
+    elif [[ -t 0 ]]; then
+        read -r -p "¿Desinstalar FUN $INSTALADO? Escribe s para confirmar: " CONFIRMAR || true
+        [[ "${CONFIRMAR:-}" =~ ^[sS]$ ]] || exit 0
+    fi
+    echo -e "${AZUL_CLARO}🗑️  Desinstalando FUN $INSTALADO...${NC}"
+    if (( EUID == 0 )); then
+        apt remove -y fun
+    else
+        sudo apt remove -y fun
+    fi
+    echo -e "${VERDE}✅ FUN se desinstaló. Tus reportes del Escritorio se conservan.${NC}"
+    if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+        zenity --info --title="FUN" --text="✅ FUN se desinstaló correctamente." 2>/dev/null || true
+    fi
+    if [[ -t 0 ]]; then
+        read -r -p "Presiona Enter para salir..." || true
+    fi
+    exit 0
 fi
 
 if [[ -f "$DEB_LOCAL" ]]; then
     echo -e "${VERDE}📦 Usando el paquete local: $DEB_LOCAL${NC}"
 else
     DEB_FILE="${TMPDIR:-/tmp}/$DEB_NAME"
+    APT_CMD[-1]="$DEB_FILE"
     echo -e "${AZUL_CLARO}⬇️  Descargando $DEB_NAME desde GitHub...${NC}"
     if command -v curl >/dev/null 2>&1; then
         curl -fL --retry 3 --connect-timeout 10 -o "$DEB_FILE" "$DEB_URL" || {
@@ -84,11 +130,15 @@ if [[ "$SHA_DESCARGA" != "$DEB_SHA256" ]]; then
 fi
 echo -e "${VERDE}✅ Paquete verificado (SHA256 correcto).${NC}"
 
-echo -e "${AZUL_CLARO}⚙️  Instalando FUN v$VERSION...${NC}"
-if (( EUID == 0 )); then
-    apt install -y --allow-downgrades "$DEB_FILE"
+if [[ " ${APT_CMD[*]} " == *" --reinstall "* ]]; then
+    echo -e "${AZUL_CLARO}⚙️  Reinstando FUN v$VERSION...${NC}"
 else
-    sudo apt install -y --allow-downgrades "$DEB_FILE"
+    echo -e "${AZUL_CLARO}⚙️  Instalando FUN v$VERSION...${NC}"
+fi
+if (( EUID == 0 )); then
+    "${APT_CMD[@]}"
+else
+    sudo "${APT_CMD[@]}"
 fi
 
 echo ""
@@ -96,6 +146,7 @@ echo -e "${VERDE}✅ FUN v$VERSION quedó instalado.${NC}"
 echo -e "${AZUL_CLARO}   Ejecuta: fun${NC}"
 echo -e "${AZUL_CLARO}   Ayuda:   fun --help${NC}"
 echo -e "${AZUL_CLARO}   Prueba:  fun --dry-run${NC}"
+echo -e "${AZUL_CLARO}   Si no aparece la captura en el Gestor de Software: sudo appstreamcli refresh --force${NC}"
 
 if command -v zenity >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
     zenity --info --title="FUN v$VERSION" \

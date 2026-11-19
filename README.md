@@ -50,6 +50,12 @@ Descarga el instalador, verifica la suma SHA256 del paquete y lo instala:
 curl -fsSL https://raw.githubusercontent.com/abuelazotech/fun-mint/main/src/instalar-fun.sh -o /tmp/instalar-fun.sh && bash /tmp/instalar-fun.sh
 ```
 
+Si FUN ya estaba instalado en la misma versión y no se refrescaron el icono o la captura, fuerza una reinstalación:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/abuelazotech/fun-mint/main/src/instalar-fun.sh -o /tmp/instalar-fun.sh && bash /tmp/instalar-fun.sh --reinstall
+```
+
 Si lo prefieres sin `curl`, descarga `instalar-fun.sh` desde este repositorio y ejecútalo con `bash instalar-fun.sh`.
 
 ### Opción 3 — Desde el código fuente
@@ -74,6 +80,14 @@ fun --help          # ayuda rápida
 fun --version       # versión instalada
 ```
 
+Opciones del instalador:
+
+```bash
+bash instalar-fun.sh --reinstall   # reinstala aunque ya estés en la misma versión
+bash instalar-fun.sh --uninstall   # desinstala FUN del sistema
+bash instalar-fun.sh --dry-run     # simula sin descargar ni modificar nada
+```
+
 Si el icono no aparece tras instalar, cierra sesión y vuelve a entrar, o ejecuta `sudo gtk-update-icon-cache /usr/share/icons/hicolor/`.
 
 ---
@@ -88,6 +102,7 @@ Instala el `.deb` de 1.2.0 encima del anterior (doble clic o cualquiera de los c
 
 - **Gestor de Software:** busca «FUN - Mantenimiento Linux Mint» y pulsa **Eliminar**.
 - **Terminal:** `sudo apt remove fun`.
+- **Instalador:** `bash instalar-fun.sh --uninstall` (o `bash src/instalar-fun-gui.sh --uninstall` para confirmar con una ventana).
 
 Los reportes que hayas guardado en el Escritorio no se eliminan: son tus archivos.
 
@@ -111,7 +126,7 @@ Los reportes que hayas guardado en el Escritorio no se eliminan: son tus archivo
 | El icono no aparece | `sudo gtk-update-icon-cache /usr/share/icons/hicolor/` y vuelve a iniciar sesión. |
 | No se puede descargar el paquete | Usa el enlace directo de la sección Instalación desde el navegador. |
 | Falló la verificación SHA256 | No instalés ese archivo: descárgalo de nuevo desde Releases. |
-| No aparece la captura en el Gestor de Software | Ejecuta `sudo appstreamcli refresh --force`, reinicia el Gestor de Software y comprueba tu conexión (la imagen se sirve desde este repositorio). |
+| No aparece la captura en el Gestor de Software | Ejecuta `bash instalar-fun.sh --reinstall` y luego `sudo appstreamcli refresh --force`; reinicia el Gestor de Software y comprueba tu conexión (la imagen se sirve desde este repositorio). |
 
 ---
 
@@ -120,8 +135,8 @@ Los reportes que hayas guardado en el Escritorio no se eliminan: son tus archivo
 | Ruta | Contenido |
 |---|---|
 | `src/fun.sh` | Comando `fun`: los 7 pasos y el reporte de salud. |
-| `src/instalar-fun.sh` | Instalador de terminal, con descarga y verificación del paquete. |
-| `src/instalar-fun-gui.sh` | Instalador con ventanas (zenity + pkexec). |
+| `src/instalar-fun.sh` | Instalador de terminal: descarga, verifica, reinstala y desinstala (`--reinstall`, `--uninstall`). |
+| `src/instalar-fun-gui.sh` | Instalador con ventanas (zenity + pkexec), también con `--uninstall`. |
 | `build.sh` | Construye `fun_1.2.0-1_amd64.deb` con permisos y propietario correctos. |
 | `packaging/` | Metadatos Debian: `control`, `changelog`, `copyright`, `postinst`, `fun.desktop` y `fun.appdata.xml` (captura del Gestor de Software). |
 | `assets/` | Iconos 256x256 y 1024x1024, `preview.png` del README y `captura.png` mostrada en el Gestor de Software. |

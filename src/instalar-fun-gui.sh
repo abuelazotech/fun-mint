@@ -18,6 +18,21 @@ PROJECT_DIR="$(dirname -- "$SCRIPT_DIR")"
 DEB_LOCAL="$PROJECT_DIR/$DEB_NAME"
 DEB_FILE="$DEB_LOCAL"
 
+MODO="install"
+for argumento in "$@"; do
+    case "$argumento" in
+        --uninstall) MODO="uninstall" ;;
+        -h|--help)
+            echo "Instalador gráfico de FUN v$VERSION"
+            echo "Uso: instalar-fun-gui.sh [--uninstall|--help]"
+            echo "  --uninstall  Desinstala FUN del sistema"
+            echo "  --help       Muestra esta ayuda"
+            exit 0
+            ;;
+        *) echo "Opción desconocida: $argumento" >&2; exit 2 ;;
+    esac
+done
+
 if ! command -v zenity >/dev/null 2>&1; then
     echo "Se necesita zenity para mostrar la interfaz gráfica. Usa src/instalar-fun.sh en la terminal." >&2
     exit 1
@@ -26,6 +41,25 @@ fi
 if ! command -v pkexec >/dev/null 2>&1; then
     zenity --error --title="FUN" --text="No se encontró pkexec. Usa el instalador de terminal (src/instalar-fun.sh)."
     exit 1
+fi
+
+INSTALLED_VERSION=$(dpkg-query -W -f='${Version}' fun 2>/dev/null || true)
+
+if [[ "$MODO" = "uninstall" ]]; then
+    if [[ -z "$INSTALLED_VERSION" ]]; then
+        zenity --info --title="FUN" --text="FUN no está instalado. Nada que desinstalar."
+        exit 0
+    fi
+    if zenity --question --title="Desinstalar FUN" \
+        --text="¿Quieres desinstalar FUN $INSTALLED_VERSION?\n\nTus reportes del Escritorio se conservarán." \
+        --ok-label="Desinstalar" --cancel-label="Cancelar" 2>/dev/null; then
+        if pkexec /usr/bin/apt remove -y fun; then
+            zenity --info --title="FUN" --text="✅ FUN se desinstaló correctamente."
+        else
+            zenity --error --title="FUN" --text="❌ No se pudo desinstalar FUN."
+        fi
+    fi
+    exit 0
 fi
 
 if [[ -f "$DEB_LOCAL" ]]; then
@@ -58,8 +92,6 @@ if [[ "$SHA_DESCARGA" != "$DEB_SHA256" ]]; then
     exit 1
 fi
 
-INSTALLED_VERSION=$(dpkg-query -W -f='${Version}' fun 2>/dev/null || true)
-
 ACCION=""
 MENSAJE=""
 ETIQUETA=""
@@ -68,14 +100,14 @@ if [ -z "$INSTALLED_VERSION" ]; then
     ACCION="instalar"
     MENSAJE="FUN no está instalado.\n\nSe instalará la versión $DEB_VERSION ($DEB_ORIGEN)."
     ETIQUETA="Instalar"
+elif dpkg --compare-versions "$INSTALLED_VERSION" eq "$DEB_VERSION"; then
+    ACCION="reinstalar"
+    MENSAJE="Ya tienes FUN $DEB_VERSION instalado.\n\nSe reinstalarán los archivos para refrescar el icono y la captura."
+    ETIQUETA="Reinstalar"
 elif dpkg --compare-versions "$INSTALLED_VERSION" lt "$DEB_VERSION"; then
     ACCION="actualizar"
     MENSAJE="Tienes FUN $INSTALLED_VERSION instalado.\n\nSe actualizará a $DEB_VERSION. Las copias antiguas se limpiarán automáticamente."
     ETIQUETA="Actualizar"
-elif dpkg --compare-versions "$INSTALLED_VERSION" eq "$DEB_VERSION"; then
-    ACCION="reinstalar"
-    MENSAJE="Ya tienes FUN $DEB_VERSION instalado.\n\n¿Quieres reinstalarlo?"
-    ETIQUETA="Reinstalar"
 else
     ACCION="reinstalar"
     MENSAJE="Tienes FUN $INSTALLED_VERSION (más reciente que $DEB_VERSION).\n\n¿Quieres reinstalar $DEB_VERSION de todos modos?"
@@ -106,7 +138,7 @@ if zenity --question --title="Instalar FUN v$VERSION" \
     fi
 
     if (( RESULTADO )); then
-        zenity --info --title="FUN" --text="✅ $OPERACION\n\nBusca «FUN - El Abuelazo Tech» en el menú de aplicaciones o escribe <b>fun</b> en la terminal."
+        zenity --info --title="FUN" --text="✅ $OPERACION\n\nBusca «FUN - El Abuelazo Tech» en el menú o escribe <b>fun</b> en la terminal.\n\nSi no aparece la captura, ejecuta: sudo appstreamcli refresh --force"
     else
         zenity --error --title="FUN" --text="❌ No se pudo completar la operación.\nRevisa la ventana de permisos o los mensajes en pantalla."
     fi
