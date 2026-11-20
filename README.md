@@ -183,7 +183,7 @@ El repositorio incluye `ppa/debian/` y `tools/preparar-ppa.sh` para generar un p
 sudo apt install dput
 gpg --keyserver keyserver.ubuntu.com --send-keys B075A1B11956EE1B427AE26202ACB4742E42E79E
 ./tools/preparar-ppa.sh noble
-./tools/preparar-ppa.sh jammy
+./tools/preparar-ppa.sh jammy '~jammy1'
 dput ppa:abuelazotech/ppa /tmp/fun-ppa-build/noble/fun_1.2.0-1_source.changes
 dput ppa:abuelazotech/ppa /tmp/fun-ppa-build/jammy/fun_1.2.0-1_source.changes
 ```
