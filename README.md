@@ -184,16 +184,16 @@ sudo apt install dput
 gpg --keyserver keyserver.ubuntu.com --send-keys B075A1B11956EE1B427AE26202ACB4742E42E79E
 ./tools/preparar-ppa.sh noble
 ./tools/preparar-ppa.sh jammy
-dput ppa:abuelazotech/fun /tmp/fun-ppa-build/noble/fun_1.2.0-1_source.changes
-dput ppa:abuelazotech/fun /tmp/fun-ppa-build/jammy/fun_1.2.0-1_source.changes
+dput ppa:abuelazotech/ppa /tmp/fun-ppa-build/noble/fun_1.2.0-1_source.changes
+dput ppa:abuelazotech/ppa /tmp/fun-ppa-build/jammy/fun_1.2.0-1_source.changes
 ```
 
-Antes de subir: crea el PPA en Launchpad e importa la clave pública en tu cuenta (Launchpad la descarga del servidor de claves). Cada serie queda en su propia carpeta.
+Antes de subir: crea el PPA en Launchpad e importa la clave pública en tu cuenta (Launchpad la descarga del servidor de claves). El PPA publicado se llama `ppa`, por eso el destino es `ppa:abuelazotech/ppa`. Cada serie queda en su propia carpeta.
 
 Una vez publicado, cualquier usuario puede instalarlo con:
 
 ```bash
-sudo add-apt-repository ppa:abuelazotech/fun
+sudo add-apt-repository ppa:abuelazotech/ppa
 sudo apt update
 sudo apt install fun
 ```
